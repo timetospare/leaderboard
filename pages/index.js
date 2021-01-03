@@ -1,65 +1,86 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import SnakeBoard from "../components/SnakeBoard";
+import Score from "../components/Score";
+import Head from "next/head";
+import { useState } from "react";
 
-export default function Home() {
+const Snake = () => {
+  const [scores, setScores] = useState([
+    {
+      name: "Reuben",
+      score: 0,
+      color: "#66fbfb",
+    },
+    {
+      name: "Tom",
+      score: 300,
+      color: "red",
+    },
+    {
+      name: "Reda",
+      score: 15,
+      color: "yellow",
+    },
+  ]);
+
+  const handleSetColor = (i, newColor) => {
+    setScores([
+      ...scores.slice(0, i),
+      {
+        ...scores[i],
+        color: newColor,
+      },
+      ...scores.slice(i + 1, scores.length),
+    ]);
+  };
+
   return (
-    <div className={styles.container}>
+    <div
+      style={{
+        backgroundColor: "#021420",
+        width: "100%",
+        height: "100vh",
+      }}
+    >
       <Head>
-        <title>Create Next App</title>
+        <title>Time to Spare Leaderboard</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <h1
+        style={{
+          margin: 0,
+          padding: "16px 0px",
+          textAlign: "center",
+          color: "white",
+        }}
+      >
+        Time to Spare Leaderboard
+      </h1>
+      <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+        {scores.map((obj, i) => (
+          <div>
+            <SnakeBoard
+              color={obj.color}
+              score={obj.score}
+              setColor={(newColor) => handleSetColor(i, newColor)}
+            />
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Score score={obj.score} color={obj.color} />
+            </div>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+            <h1 style={{ textAlign: "center", color: obj.color }}>
+              {obj.name}
+            </h1>
+          </div>
+        ))}
+      </div>
     </div>
-  )
-}
+  );
+};
+
+export default Snake;
