@@ -7,17 +7,17 @@ const Snake = () => {
   const [scores, setScores] = useState([
     {
       name: "Reuben",
-      score: 2,
+      score: 0,
       color: "#66fbfb",
     },
     {
       name: "Tom",
-      score: 30,
+      score: 0,
       color: "red",
     },
     {
       name: "Reda",
-      score: 15,
+      score: 0,
       color: "yellow",
     },
   ]);
