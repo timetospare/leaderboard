@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import randomColor from "randomcolor";
+import getOS from "./getOS";
 import randomImage from "./RandomImage";
 
 const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
@@ -124,6 +125,12 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
 
   const [shadow, setShadow] = useState(false);
   const [breaks, setBreaks] = useState(false);
+  const [easterEgg, setEasterEgg] = useState(false);
+  const [negative, setNegative] = useState(false);
+  const [zSpin, setZSpin] = useState(false);
+  const [threeD, setThreeD] = useState(false);
+
+  const [macWindows, setMacWindows] = useState(null);
 
   const handleKeyPress = (event) => {
     console.log({ event });
@@ -183,6 +190,26 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
         case 84:
           setBreaks(!breaks);
           break;
+        case 76:
+          setEasterEgg(!easterEgg);
+          break;
+        case 78:
+          setNegative(!negative);
+          break;
+        case 90:
+          setZSpin(!zSpin);
+          break;
+        case 75:
+          setThreeD(!threeD);
+          break;
+        case 85:
+          console.log({ navigator });
+          if (macWindows) {
+            setMacWindows(null);
+          } else {
+            setMacWindows(getOS());
+          }
+          break;
         default:
       }
     }
@@ -196,8 +223,11 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
           width: 10,
           borderRadius: dots && "50%",
           height: 10,
-          backgroundColor:
-            !breaks || i % 3 === 0 ? multipleColors?.[i] || color : "",
+          backgroundColor: negative
+            ? "#021420"
+            : !breaks || i % 3 === 0
+            ? multipleColors?.[i] || color
+            : "",
           position: "absolute",
           bottom: part.y * 10,
           boxShadow: shadow && "10px 10px white",
@@ -225,13 +255,16 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
       style={{
         position: "relative",
         height: height * 10,
+        backgroundColor: negative && color,
         overflow: "hidden",
         borderRadius: circle && "50%",
-
+        cursor: "pointer",
         width: width * 10,
         border: "1px solid white",
         transform: `${circle ? "rotate(90deg)" : ""} ${
           pulse ? "scale(0.7)" : ""
+        } ${zSpin ? "rotateZ(180deg)" : ""} ${
+          threeD ? "rotateY(-180deg)" : ""
         }`,
         transition: `transform ${circle ? "2s" : "0.6s"} ease-in-out`,
         zIndex: 20,
@@ -252,6 +285,30 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
           }}
           src={image}
         />
+      )}
+      {easterEgg && (
+        <iframe
+          src="https://en.m.wikipedia.org/wiki/Easter_egg_(media)"
+          style={{ height: "100%", width: "100%" }}
+        />
+      )}
+      {macWindows?.includes("Mac") && (
+        <div style={{ width: "100%", height: "100%", padding: 16 }}>
+          <h2 style={{ color: "white", textAlign: "center" }}>Get a PC</h2>
+          <img
+            src="/pcmap.png"
+            style={{ height: "80%", width: "100%", objectFit: "cover" }}
+          />
+        </div>
+      )}
+      {macWindows?.includes("Windows") && (
+        <div style={{ width: "100%", height: "100%", padding: 16 }}>
+          <h2 style={{ color: "white", textAlign: "center" }}>Good choice</h2>
+          <img
+            src="https://cdn.geekwire.com/wp-content/uploads/2019/05/Clippy.jpg.jpg"
+            style={{ height: "80%", width: "100%", objectFit: "cover" }}
+          />
+        </div>
       )}
       {renderSnake()}
     </div>
