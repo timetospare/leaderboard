@@ -33,6 +33,8 @@ const Snake = () => {
     ]);
   };
 
+  const [selected, setSelected] = useState(null);
+
   return (
     <div
       style={{
@@ -61,6 +63,9 @@ const Snake = () => {
             <SnakeBoard
               color={obj.color}
               score={obj.score}
+              selected={obj.name === selected}
+              setSelected={setSelected}
+              name={obj.name}
               setColor={(newColor) => handleSetColor(i, newColor)}
             />
             <div

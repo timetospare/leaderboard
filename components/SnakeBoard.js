@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import randomColor from "randomcolor";
+import randomImage from "./RandomImage";
 
-const Snake = ({ color, setColor, score }) => {
+const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
   const width = 40;
   const height = 40;
 
@@ -111,7 +112,6 @@ const Snake = ({ color, setColor, score }) => {
     down: "up",
   };
 
-  const [selected, setSelected] = useState(false);
   const board = useRef(null);
 
   useEffect(() => {
@@ -127,6 +127,7 @@ const Snake = ({ color, setColor, score }) => {
   }, [head, selected]);
 
   const [circle, setCircle] = useState(false);
+  const [image, setImage] = useState(false);
 
   const handleKeyPress = (event) => {
     console.log({ event });
@@ -170,6 +171,14 @@ const Snake = ({ color, setColor, score }) => {
         case 66:
           setDots(!dots);
           break;
+        case 80:
+          if (image) {
+            setImage(false);
+          } else {
+            setImage(randomImage());
+          }
+
+          break;
         default:
       }
     }
@@ -179,13 +188,14 @@ const Snake = ({ color, setColor, score }) => {
     <div
       onClick={() => {
         if (!selected) {
-          setSelected(true);
+          setSelected(name);
           board.current.focus();
         } else {
-          setSelected(false);
+          setSelected(null);
           board.current.blur();
         }
       }}
+      onBlur={() => setSelected(null)}
       onKeyDown={handleKeyPress}
       ref={board}
       tabindex="0"
@@ -198,11 +208,25 @@ const Snake = ({ color, setColor, score }) => {
         border: "1px solid white",
         transform: circle && "rotate(90deg)",
         transition: "transform 2s ease-in-out",
+        zIndex: 20,
         outline:
           !circle && `${selected ? 5 : 1}px solid rgba(255, 255, 255, 0.8)`,
         margin: 16,
       }}
     >
+      {image && (
+        <img
+          style={{
+            position: "absolute",
+            zIndex: 0,
+            opacity: "50%",
+            height: "100%",
+            width: "100%",
+            objectFit: "cover",
+          }}
+          src={image}
+        />
+      )}
       {renderSnake()}
     </div>
   );
