@@ -65,23 +65,6 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
 
   const [dots, setDots] = useState(false);
 
-  const renderSnake = () =>
-    body.map((part, i) => (
-      <div
-        key={i}
-        style={{
-          width: 10,
-          borderRadius: dots && "50%",
-          height: 10,
-          backgroundColor: multipleColors?.[i] || color,
-          position: "absolute",
-          bottom: part.y * 10,
-          left: part.x * 10,
-          opacity: "80%",
-        }}
-      />
-    ));
-
   /*
   useEffect(() => {
     const interval = setInterval(() => {
@@ -128,6 +111,19 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
 
   const [circle, setCircle] = useState(false);
   const [image, setImage] = useState(false);
+
+  const [pulse, setPulse] = useState(false);
+
+  useEffect(() => {
+    if (pulse) {
+      setTimeout(() => {
+        setPulse(false);
+      }, 600);
+    }
+  }, [pulse]);
+
+  const [shadow, setShadow] = useState(false);
+  const [breaks, setBreaks] = useState(false);
 
   const handleKeyPress = (event) => {
     console.log({ event });
@@ -177,12 +173,39 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
           } else {
             setImage(randomImage());
           }
-
+          break;
+        case 69:
+          setPulse(!pulse);
+          break;
+        case 82:
+          setShadow(!shadow);
+          break;
+        case 84:
+          setBreaks(!breaks);
           break;
         default:
       }
     }
   };
+
+  const renderSnake = () =>
+    body.map((part, i) => (
+      <div
+        key={i}
+        style={{
+          width: 10,
+          borderRadius: dots && "50%",
+          height: 10,
+          backgroundColor:
+            !breaks || i % 3 === 0 ? multipleColors?.[i] || color : "",
+          position: "absolute",
+          bottom: part.y * 10,
+          boxShadow: shadow && "10px 10px white",
+          left: part.x * 10,
+          opacity: "80%",
+        }}
+      />
+    ));
 
   return (
     <div
@@ -204,10 +227,13 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
         height: height * 10,
         overflow: "hidden",
         borderRadius: circle && "50%",
+
         width: width * 10,
         border: "1px solid white",
-        transform: circle && "rotate(90deg)",
-        transition: "transform 2s ease-in-out",
+        transform: `${circle ? "rotate(90deg)" : ""} ${
+          pulse ? "scale(0.7)" : ""
+        }`,
+        transition: `transform ${circle ? "2s" : "0.6s"} ease-in-out`,
         zIndex: 20,
         outline:
           !circle && `${selected ? 5 : 1}px solid rgba(255, 255, 255, 0.8)`,
