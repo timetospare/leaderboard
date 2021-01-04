@@ -79,13 +79,13 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
     if (game) {
       tail.map((part) => {
         if (part.x === newHead.x && part.y === newHead.y) {
-          //alert("You get nothing! You lose! Good day Sir.");
+          alert("You get nothing! You lose! Good day Sir.");
           setTail([]);
         }
       });
       body.map((part) => {
         if (part.x === newHead.x && part.y === newHead.y) {
-          //alert("You get nothing! You lose! Good day Sir.");
+          alert("You get nothing! You lose! Good day Sir.");
           setTail([]);
         }
       });
@@ -137,7 +137,7 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
 
   const smartDirection = () => {
     let dir = direction;
-    if (tail.length + body.length < 50) {
+    if (tail.length + body.length < 42) {
       if (direction === "right") {
         if (food.x === head.x + 1) {
           dir = "up";
@@ -149,22 +149,27 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
       if (direction === "up" && food.y === head.y + 1) {
         dir = "left";
       }
-    } else {
-      if (direction === "right") {
-        dir = "up";
-      } else {
-        if (direction === "up" && head.y === 38) {
-          dir = "left";
-        } else if (direction === "left" && head.y === 39) {
+    } else if (tail.length + body.length < 120) {
+      if (food.y > width / 2) {
+        if (direction === "up" && head.y + 1 === food.y) {
+          dir = "right";
+        } else if (direction === "right" && head.x === width - 2) {
           dir = "down";
         } else if (direction === "down" && head.y === 1) {
           dir = "left";
-        } else {
+        } else if (direction === "left" && head.x === 1) {
           dir = "up";
         }
-      }
-      if (head.y == 38) {
-        console.log({ dir });
+      } else {
+        if (direction === "up" && head.y === height - 2) {
+          dir = "right";
+        } else if (direction === "right" && head.x === width - 2) {
+          dir = "down";
+        } else if (direction === "down" && head.y - 1 === food.y) {
+          dir = "left";
+        } else if (direction === "left" && head.x === 1) {
+          dir = "up";
+        }
       }
     }
 
@@ -187,17 +192,15 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
     if (game) {
       setTail(moveSnakeBody(head, tail, true));
     }
-    if (!selected && smart) {
-      const newDirection = smartDirection();
+    if (!selected) {
+      let newDirection = direction;
+      if (smart) {
+        newDirection = smartDirection();
+      } else if (Math.random() < 0.15) {
+        newDirection = randomDirection();
+      }
       if (opposites[newDirection] !== direction) {
         setDirection(newDirection);
-      }
-    } else {
-      if (!selected && Math.random() < 0.15) {
-        const newDirection = randomDirection();
-        if (opposites[newDirection] !== direction) {
-          setDirection(newDirection);
-        }
       }
     }
 
