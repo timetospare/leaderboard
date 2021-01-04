@@ -12,7 +12,7 @@ const Snake = () => {
     },
     {
       name: "Tom",
-      score: 4,
+      score: 5,
       color: "red",
     },
     {
