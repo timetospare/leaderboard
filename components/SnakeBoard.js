@@ -24,6 +24,32 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
   const [direction, setDirection] = useState("right");
   const [multipleColors, setMultipleColors] = useState(null);
 
+  const [game, setGame] = useState(false);
+
+  const [food, setFood] = useState({
+    x: Math.floor(Math.random() * width),
+    y: Math.floor(Math.random() * height),
+  });
+  const [tailLength, setTailLength] = useState(0);
+  const [tail, setTail] = useState([]);
+
+  const checkIfEatingFood = (position) => {
+    const { x, y } = position;
+    if (food.x === x && food.y === y) {
+      setFood({
+        x: Math.floor(Math.random() * width),
+        y: Math.floor(Math.random() * height),
+      });
+
+      if (tailLength === 0) {
+        setTail([body[0]]);
+      } else {
+        setTail([...tail, body[0]]);
+      }
+      setTailLength(tailLength + 1);
+    }
+  };
+
   const getNewSnakeHeadPosition = (input) => {
     const { x, y } = input;
     const newHead = {
@@ -50,13 +76,33 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
         newHead.y = y - 1;
       }
     }
+    if (game) {
+      tail.map((part) => {
+        if (part.x === newHead.x && part.y === newHead.y) {
+          alert("You get nothing! You lose! Good day Sir.");
+          setTail([]);
+        }
+      });
+      body.map((part) => {
+        if (part.x === newHead.x && part.y === newHead.y) {
+          alert("You get nothing! You lose! Good day Sir.");
+          setTail([]);
+        }
+      });
+      checkIfEatingFood(newHead);
+    }
+
     return newHead;
   };
 
-  const moveSnakeBody = (newSnakeHead) => {
-    const newBodyPositions = body.map((part, i) => {
-      if (i < body.length - 1) {
-        return body[i + 1];
+  const [gameOver, setGameOver] = useState(false);
+
+  const moveSnakeBody = (newSnakeHead, bodySection, tail) => {
+    const newBodyPositions = bodySection.map((part, i) => {
+      if (tail) {
+        return bodySection[i + 1] || body[0];
+      } else if (i < bodySection.length - 1) {
+        return bodySection[i + 1];
       } else {
         return newSnakeHead;
       }
@@ -98,17 +144,27 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
 
   const board = useRef(null);
 
+  const [pause, setPause] = useState(false);
+
   useEffect(() => {
-    setBody(moveSnakeBody(head));
+    setBody(moveSnakeBody(head, body));
+    if (game) {
+      setTail(moveSnakeBody(head, tail, true));
+    }
     if (!selected && Math.random() < 0.15) {
       const newDirection = randomDirection();
       if (opposites[newDirection] !== direction) {
         setDirection(newDirection);
       }
     }
-    const timer = setTimeout(() => setHead(getNewSnakeHeadPosition(head)), 30);
-    return () => clearTimeout(timer);
-  }, [head, selected]);
+    if (!pause) {
+      const timer = setTimeout(
+        () => setHead(getNewSnakeHeadPosition(head)),
+        30
+      );
+      return () => clearTimeout(timer);
+    }
+  }, [head, selected, pause]);
 
   const [circle, setCircle] = useState(false);
   const [image, setImage] = useState(false);
@@ -210,9 +266,35 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
             setMacWindows(getOS());
           }
           break;
+        case 48:
+          setPause(!pause);
+          break;
+        case 71:
+          setGame(!game);
+          break;
         default:
       }
     }
+  };
+
+  const renderTail = () => {
+    return tail.map((part, i) => (
+      <div
+        className="tail"
+        key={`${i}tail`}
+        style={{
+          width: 10,
+          zIndex: 15,
+          borderRadius: dots && "50%",
+          height: 10,
+          backgroundColor: "white",
+          position: "absolute",
+          bottom: part.y * 10,
+          left: part.x * 10,
+          opacity: "80%",
+        }}
+      />
+    ));
   };
 
   const renderSnake = () =>
@@ -301,6 +383,21 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
           />
         </div>
       )}
+      {game && (
+        <div
+          style={{
+            width: 10,
+            borderRadius: "50%",
+            height: 10,
+            backgroundColor: "white",
+            position: "absolute",
+            bottom: food.y * 10,
+            left: food.x * 10,
+            opacity: "80%",
+          }}
+        />
+      )}
+      {game && renderTail()}
       {macWindows?.includes("Windows") && (
         <div style={{ width: "100%", height: "100%", padding: 16 }}>
           <h2 style={{ color: "white", textAlign: "center" }}>Good choice</h2>
