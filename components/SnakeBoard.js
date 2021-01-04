@@ -296,7 +296,7 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
         <div style={{ width: "100%", height: "100%", padding: 16 }}>
           <h2 style={{ color: "white", textAlign: "center" }}>Get a PC</h2>
           <img
-            src="/pcmap.png"
+            src="/pcmap-copy.png"
             style={{ height: "80%", width: "100%", objectFit: "cover" }}
           />
         </div>
