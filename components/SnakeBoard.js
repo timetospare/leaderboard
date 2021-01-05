@@ -11,6 +11,7 @@ const Snake = ({
   name,
   setSelected,
   selected,
+  speed,
   gameProp,
   onError,
   smartProp,
@@ -201,7 +202,7 @@ const Snake = ({
     if (!pause) {
       const timer = setTimeout(
         () => setHead(getNewSnakeHeadPosition(head)),
-        30
+        speed || 30
       );
       return () => clearTimeout(timer);
     }
