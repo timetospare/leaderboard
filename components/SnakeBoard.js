@@ -31,6 +31,7 @@ const Snake = ({
   };
 
   const length = score;
+  const [ticker, setTicker] = useState(0);
   const [body, setBody] = useState(createInitialSnakeBody(length, 2));
   const [head, setHead] = useState(body[body.length - 1] || {});
   const [direction, setDirection] = useState("right");
@@ -92,12 +93,14 @@ const Snake = ({
       tail.map((part) => {
         if (part.x === newHead.x && part.y === newHead.y) {
           alert("You get nothing! You lose! Good day Sir.");
+          setTicker(0);
           setTail([]);
         }
       });
       body.map((part) => {
         if (part.x === newHead.x && part.y === newHead.y) {
           alert("You get nothing! You lose! Good day Sir.");
+          setTicker(0);
           setTail([]);
         }
       });
@@ -200,6 +203,7 @@ const Snake = ({
     }
 
     if (!pause) {
+      setTicker(ticker + 1);
       const timer = setTimeout(
         () => setHead(getNewSnakeHeadPosition(head)),
         speed || 30
@@ -428,6 +432,33 @@ const Snake = ({
             style={{ height: "80%", width: "100%", objectFit: "cover" }}
           />
         </div>
+      )}
+      {game && (
+        <>
+          <p
+            style={{
+              fontWeight: "bold",
+              color: "white",
+              opacity: 0.4,
+              marginBottom: 0,
+              marginTop: 8,
+              paddingLeft: 8,
+            }}
+          >
+            Ticker: {Math.round(ticker / 100)}
+          </p>
+          <p
+            style={{
+              fontWeight: "bold",
+              color: "white",
+              opacity: 0.4,
+              marginTop: 8,
+              paddingLeft: 8,
+            }}
+          >
+            Score: {tail.length}
+          </p>
+        </>
       )}
       {game && (
         <div

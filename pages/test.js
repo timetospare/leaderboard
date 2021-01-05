@@ -77,6 +77,7 @@ const Test = () => {
   return (
     <div
       style={{
+        color: "white",
         backgroundColor: "#021420",
         width: "100%",
         height: "100vh",
@@ -96,6 +97,12 @@ const Test = () => {
       >
         Time to Spare Code Test
       </h1>
+      <p style={{ textAlign: "center" }}>
+        <i>
+          We'll run your AI five times up until the ticker hits 50. Your score
+          will be the average of the five runs.
+        </i>
+      </p>
       <div style={{ display: "flex", justifyContent: "space-evenly" }}>
         <div>
           <p style={{ color: "white" }}>Speed (lower is faster)</p>
@@ -142,6 +149,7 @@ const Test = () => {
             highlight={(value) => highlight(value, languages.js)}
             padding={10}
             style={{
+              color: "black",
               backgroundColor: "rgba(255, 255, 255, 0.9)",
               fontFamily: '"Fira code", "Fira Mono", monospace',
               fontSize: 12,
