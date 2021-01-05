@@ -3,7 +3,16 @@ import randomColor from "randomcolor";
 import getOS from "./getOS";
 import randomImage from "./RandomImage";
 
-const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
+const Snake = ({
+  color,
+  setColor,
+  score,
+  name,
+  setSelected,
+  selected,
+  gameProp,
+  smartProp,
+}) => {
   const width = 40;
   const height = 40;
 
@@ -24,7 +33,7 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
   const [direction, setDirection] = useState("right");
   const [multipleColors, setMultipleColors] = useState(null);
 
-  const [game, setGame] = useState(false);
+  const [game, setGame] = useState(gameProp || false);
 
   const [food, setFood] = useState({
     x: Math.floor(Math.random() * (width - 2)) + 1,
@@ -192,11 +201,15 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
     if (game) {
       setTail(moveSnakeBody(head, tail, true));
     }
-    if (!selected) {
+    if (smart && game) {
       let newDirection = direction;
-      if (smart) {
-        newDirection = smartDirection();
-      } else if (Math.random() < 0.15) {
+      newDirection = smartDirection();
+      if (opposites[newDirection] !== direction) {
+        setDirection(newDirection);
+      }
+    } else if (!selected) {
+      let newDirection = direction;
+      if (Math.random() < 0.15) {
         newDirection = randomDirection();
       }
       if (opposites[newDirection] !== direction) {
@@ -235,7 +248,7 @@ const Snake = ({ color, setColor, score, name, setSelected, selected }) => {
 
   const [macWindows, setMacWindows] = useState(null);
 
-  const [smart, setSmart] = useState(false);
+  const [smart, setSmart] = useState(smartProp || false);
 
   const handleKeyPress = (event) => {
     console.log({ event });
