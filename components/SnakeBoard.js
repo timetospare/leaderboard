@@ -262,7 +262,7 @@ const Snake = ({
             setMultipleColors(null);
           } else {
             const colors = [];
-            for (let i = 0; i < length; i += 1) {
+            for (let i = 0; i < length + tail?.length; i += 1) {
               colors.push(randomColor({ luminosity: "bright" }));
             }
             setMultipleColors(colors);
@@ -333,7 +333,7 @@ const Snake = ({
           zIndex: 15,
           borderRadius: dots && "50%",
           height: 10,
-          backgroundColor: "white",
+          backgroundColor: multipleColors?.[i] || "white",
           position: "absolute",
           bottom: part.y * 10,
           left: part.x * 10,

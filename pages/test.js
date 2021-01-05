@@ -8,49 +8,48 @@ import "prismjs/components/prism-clike";
 import "prismjs/themes/prism.css";
 import "prismjs/components/prism-javascript";
 
-const scores = [
-  {
-    name: "snA.I.ke",
-    score: 10,
-    color: "#66fbfb",
-  },
-];
-
-const Test = () => {
-  const [code, setCode] = useState(
-    `// Don't delete these lines
-  window.changeDirection = ({
-    direction,
-    head,
-    food,
-    body,
-    tail,
-    width,
-    height,
-  }) => {  
-    // Put your code in here
-    
-    let newDirection = direction
-    if (direction === "right" && food.x === head.x + 1) {
-      newDirection = "up";
-    }
-    if (direction === "left" && food.x === head.x - 1) {
-      newDirection = "up";
-    }
-    if (direction === "up" && food.y === head.y + 1) {
-      newDirection = "left";
-    }
-    return newDirection
-    
-    // This function should return "up", "down", "left" or "right".
-  }
+const defaultCode = `// Don't delete these lines
+window.changeDirection = ({
+  direction,
+  head,
+  food,
+  tail,
+  width,
+  height,
+}) => {  
+  // Put your code in here
   
+  let newDirection = direction
+  if (direction === "right" && food.x === head.x + 1) {
+    newDirection = "up";
+  }
+  if (direction === "left" && food.x === head.x - 1) {
+    newDirection = "up";
+  }
+  if (direction === "up" && food.y === head.y + 1) {
+    newDirection = "left";
+  }
+  return newDirection
+  
+  // This function should return "up", "down", "left" or "right".
+}
+
 // direction is the current direction of the snake
 // head is an object { x: value, y: value } giving current location of the head
 // width and height are the dimensions of the board (40 x 40)
 // food is an {x, y} object location of the next piece of snake food
-  `
-  );
+`;
+
+const scores = [
+  {
+    name: "snA.I.ke",
+    score: 1,
+    color: "orange",
+  },
+];
+
+const Test = () => {
+  const [code, setCode] = useState(defaultCode);
 
   useEffect(() => {
     if (
@@ -122,15 +121,6 @@ const Test = () => {
                   name={obj.name}
                   setColor={(newColor) => handleSetColor(i, newColor)}
                 />
-                <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Score score={obj.score} color={obj.color} />
-                </div>
 
                 <h1 style={{ textAlign: "center", color: obj.color }}>
                   {obj.name}
@@ -146,8 +136,8 @@ const Test = () => {
           <Editor
             value={code}
             onValueChange={(hello) => {
-              localStorage.setItem("code", hello);
               setCode(hello);
+              localStorage.setItem("code", hello);
             }}
             highlight={(value) => highlight(value, languages.js)}
             padding={10}
@@ -159,6 +149,7 @@ const Test = () => {
             }}
           />
           <button onClick={handleSaveCode}>Save</button>
+          <button onClick={() => setCode(defaultCode)}>Reset</button>
         </div>
       </div>
     </div>
