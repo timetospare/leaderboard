@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import randomColor from "randomcolor";
 import getOS from "./getOS";
 import randomImage from "./RandomImage";
+import smartDirection from "../functions/smartDirection";
 
 const Snake = ({
   color,
@@ -11,6 +12,7 @@ const Snake = ({
   setSelected,
   selected,
   gameProp,
+  onError,
   smartProp,
 }) => {
   const width = 40;
@@ -144,47 +146,6 @@ const Snake = ({
     } else return "right";
   };
 
-  const smartDirection = () => {
-    let dir = direction;
-    if (tail.length + body.length < 42) {
-      if (direction === "right") {
-        if (food.x === head.x + 1) {
-          dir = "up";
-        }
-      }
-      if (direction === "left" && food.x === head.x - 1) {
-        dir = "up";
-      }
-      if (direction === "up" && food.y === head.y + 1) {
-        dir = "left";
-      }
-    } else if (tail.length + body.length < 120) {
-      if (food.y > width / 2) {
-        if (direction === "up" && head.y + 1 === food.y) {
-          dir = "right";
-        } else if (direction === "right" && head.x === width - 2) {
-          dir = "down";
-        } else if (direction === "down" && head.y === 1) {
-          dir = "left";
-        } else if (direction === "left" && head.x === 1) {
-          dir = "up";
-        }
-      } else {
-        if (direction === "up" && head.y === height - 2) {
-          dir = "right";
-        } else if (direction === "right" && head.x === width - 2) {
-          dir = "down";
-        } else if (direction === "down" && head.y - 1 === food.y) {
-          dir = "left";
-        } else if (direction === "left" && head.x === 1) {
-          dir = "up";
-        }
-      }
-    }
-
-    return dir;
-  };
-
   const opposites = {
     left: "right",
     right: "left",
@@ -196,6 +157,9 @@ const Snake = ({
 
   const [pause, setPause] = useState(false);
 
+  const pickDirection =
+    typeof changeDirection !== "undefined" ? changeDirection : smartDirection;
+
   useEffect(() => {
     setBody(moveSnakeBody(head, body));
     if (game) {
@@ -203,7 +167,24 @@ const Snake = ({
     }
     if (smart && game) {
       let newDirection = direction;
-      newDirection = smartDirection();
+      try {
+        newDirection = pickDirection({
+          direction,
+          food,
+          head,
+          tail,
+          body,
+          width,
+          height,
+        });
+      } catch (err) {
+        if (onError) {
+          onError(err);
+        } else {
+          throw err;
+        }
+      }
+
       if (opposites[newDirection] !== direction) {
         setDirection(newDirection);
       }
@@ -397,7 +378,7 @@ const Snake = ({
       onBlur={() => setSelected(null)}
       onKeyDown={handleKeyPress}
       ref={board}
-      tabindex="0"
+      tabIndex="0"
       style={{
         position: "relative",
         height: height * 10,
