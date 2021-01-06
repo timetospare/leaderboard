@@ -19,15 +19,19 @@ window.changeDirection = ({
 }) => {  
   // Put your code in here
   
+  // This example here is our Zoolander snake AI.
   let newDirection = direction
   if (direction === "right" && food.x === head.x + 1) {
-    newDirection = "up";
+    newDirection = "down";
   }
   if (direction === "left" && food.x === head.x - 1) {
-    newDirection = "up";
+    newDirection = "down";
   }
-  if (direction === "up" && food.y === head.y + 1) {
-    newDirection = "left";
+  if (direction === "down" && food.y === head.y - 1) {
+    newDirection = "right";
+  }
+  if (direction === "up") {
+    newDirection = "right"
   }
   return newDirection
   
@@ -38,6 +42,8 @@ window.changeDirection = ({
 // head is an object { x: value, y: value } giving current location of the head
 // width and height are the dimensions of the board (40 x 40)
 // food is an {x, y} object location of the next piece of snake food
+// tail is an array of { x, y} object locations of each part of the snake's tail
+
 `;
 
 const scores = [
@@ -84,7 +90,7 @@ const Test = () => {
       }}
     >
       <Head>
-        <title>Time to Spare Code Test</title>
+        <title>Time to Spare Code Challenge</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1
@@ -95,22 +101,47 @@ const Test = () => {
           color: "white",
         }}
       >
-        Time to Spare Code Test
+        <a
+          href="https://timetospare.com"
+          target="_blank"
+          style={{ color: "#0087ee" }}
+        >
+          Time to Spare
+        </a>{" "}
+        Code Challenge
       </h1>
-      <p style={{ textAlign: "center" }}>
-        <i>
-          We'll run your AI five times up until your snake dies or the ticker
-          hits 60. Your score will be the average of the five runs.
-        </i>
+      <p style={{ textAlign: "center", marginTop: 0 }}>
+        We'll run your AI five times up until your snake dies or the ticker hits
+        60. Your score will be the average of the five runs.
       </p>
-      <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-        <div>
-          <p style={{ color: "white" }}>Speed (lower is faster)</p>
-          <input
-            type="number"
-            value={speed}
-            onChange={(e) => setSpeed(Number(e.target.value))}
-          />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          paddingTop: 16,
+          borderTop: "1px solid #DBDBDB",
+        }}
+      >
+        <div style={{ marginRight: 48 }}>
+          <div style={{ paddingLeft: 16 }}>
+            <h2
+              style={{
+                color: "white",
+                marginTop: 0,
+
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              Tick speed:
+              <input
+                type="number"
+                style={{ marginLeft: 16, height: "100%", width: 64 }}
+                value={speed}
+                onChange={(e) => setSpeed(Number(e.target.value))}
+              />
+            </h2>
+          </div>
           <div>
             {scores.map((obj, i) => (
               <div>
@@ -137,6 +168,7 @@ const Test = () => {
           </div>
         </div>
         <div style={{ width: 500 }}>
+          <h2 style={{ color: "white", marginTop: 0 }}>Your code</h2>
           {error && (
             <p style={{ color: "red", fontWeight: "bold" }}>{error.message}</p>
           )}
@@ -150,10 +182,12 @@ const Test = () => {
             padding={10}
             style={{
               color: "black",
+              marginTop: 16,
+              borderRadius: 2,
               backgroundColor: "rgba(255, 255, 255, 0.9)",
               fontFamily: '"Fira code", "Fira Mono", monospace',
               fontSize: 12,
-              height: "90%",
+              height: "80%",
             }}
           />
           <button onClick={handleSaveCode}>Save</button>
