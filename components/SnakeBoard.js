@@ -90,7 +90,7 @@ const Snake = ({
       }
     }
     if (game) {
-      tail.map((part) => {
+      tail.slice(0, tail.length - 1).map((part) => {
         if (part.x === newHead.x && part.y === newHead.y) {
           alert("You get nothing! You lose! Good day Sir.");
           setTicker(0);

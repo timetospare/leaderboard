@@ -80,7 +80,7 @@ const Test = () => {
         color: "white",
         backgroundColor: "#021420",
         width: "100%",
-        height: "100vh",
+        minHeight: "100vh",
       }}
     >
       <Head>
@@ -99,8 +99,8 @@ const Test = () => {
       </h1>
       <p style={{ textAlign: "center" }}>
         <i>
-          We'll run your AI five times up until the ticker hits 50. Your score
-          will be the average of the five runs.
+          We'll run your AI five times up until your snake dies or the ticker
+          hits 60. Your score will be the average of the five runs.
         </i>
       </p>
       <div style={{ display: "flex", justifyContent: "space-evenly" }}>
