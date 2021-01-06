@@ -7,7 +7,7 @@ const Snake = () => {
   const [scores, setScores] = useState([
     {
       name: "Reuben",
-      score: 10,
+      score: 12,
       color: "#66fbfb",
     },
     {
@@ -17,7 +17,7 @@ const Snake = () => {
     },
     {
       name: "Reda",
-      score: 6,
+      score: 8,
       color: "yellow",
     },
   ]);
