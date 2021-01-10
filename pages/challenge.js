@@ -187,7 +187,8 @@ const Test = () => {
               backgroundColor: "rgba(255, 255, 255, 0.9)",
               fontFamily: '"Fira code", "Fira Mono", monospace',
               fontSize: 12,
-              height: "80%",
+              minHeight: 500,
+              overflow: "auto",
             }}
           />
           <button onClick={handleSaveCode}>Save</button>
