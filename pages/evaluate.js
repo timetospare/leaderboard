@@ -98,7 +98,7 @@ const Test = () => {
       }}
     >
       <Head>
-        <title>Time to Spare Code Challenge</title>
+        <title>Code Challenge Evaluate</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1
