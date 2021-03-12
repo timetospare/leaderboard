@@ -178,7 +178,7 @@ const Test = () => {
                   score={obj.score}
                   selected={selected}
                   speed={speed}
-                  stopAt={60}
+                  stopAt={40}
                   boardRunKey={boardRunKey}
                   gameProp
                   onError={(err) => setError(err)}
