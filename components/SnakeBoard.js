@@ -4,6 +4,113 @@ import getOS from "./getOS";
 import randomImage from "./RandomImage";
 import smartDirection from "../functions/smartDirection";
 
+const pathfinder = ({ direction, head, food, tail, width, height }) => {
+  const calculateNextPoint = (current) => {
+    const { x, y, dir } = current;
+    let newX = x;
+    let newY = y;
+
+    if (dir === "up") {
+      newY = (y + 1) % height;
+    }
+    if (dir === "down") {
+      newY = (y - 1 + height) % height;
+    }
+    if (dir === "right") {
+      newX = (x + 1) % width;
+    }
+    if (dir === "left") {
+      newX = (x - 1 + width) % width;
+    }
+
+    return { x: newX, y: newY };
+  };
+
+  const nextPoint = calculateNextPoint({
+    x: head.x,
+    y: head.y,
+    dir: direction,
+  });
+
+  const directions = ["right", "up", "down", "left"];
+
+  // initiate a grid of danger points
+  const coordinates = Array.from(new Array(width), (_, x) =>
+    Array.from(new Array(height), (_, y) => false)
+  );
+  tail.forEach((point) => {
+    const { x, y } = point;
+    coordinates[x][y] = true;
+  });
+  coordinates[head.x][head.y] = true;
+
+  const algorithm = (dest, orig, grid) => {
+    if (dest.x === orig.x && dest.y === orig.y) {
+      return [];
+    } else {
+      const list = [[{ x: dest.x, y: dest.y }, 0]];
+      let pointFound = false;
+
+      const calculateAdjacent = (point) => {
+        return directions.map((dir) => calculateNextPoint({ ...point, dir }));
+      };
+
+      const addAdjacent = (point, counter) => {
+        const adjPoints = calculateAdjacent(point);
+        adjPoints.forEach((adjPoint) => {
+          if (
+            !list.filter(
+              (item) => item[0].x === adjPoint.x && item[0].y === adjPoint.y
+            )[0] &&
+            !grid[adjPoint.x][adjPoint.y]
+          ) {
+            list.push([adjPoint, counter]);
+
+            if (adjPoint.x === orig.x && adjPoint.y === orig.y) {
+              pointFound = true;
+            }
+          }
+        });
+      };
+
+      console.log({ list });
+
+      let i = 0;
+      while (pointFound === false && i < 400) {
+        const recentPoints = list.filter((item) => item[1] === i);
+        recentPoints.forEach((item) => addAdjacent(item[0], i + 1));
+        i += 1;
+      }
+
+      const isAdjacent = (pointA, pointB) => {
+        const adjPoints = calculateAdjacent(pointA);
+        let adjacent = false;
+        adjPoints.forEach((adjPoint) => {
+          if (pointB.x === adjPoint.x && pointB.y === adjPoint.y) {
+            adjacent = true;
+          }
+        });
+        return adjacent;
+      };
+
+      const path = [orig];
+      for (let j = i - 1; j > 0; j -= 1) {
+        const backPoints = list
+          .filter((item) => item[1] === j)
+          .filter((item) => isAdjacent(item[0], path[path.length - 1]));
+        if (backPoints[0]) {
+          path.push(backPoints[0][0]);
+        }
+      }
+
+      console.log({ path });
+      return path;
+    }
+  };
+
+  return algorithm(food, nextPoint, coordinates);
+};
+
 const Snake = ({
   color,
   setColor,
@@ -217,6 +324,12 @@ const Snake = ({
     }
   }, [ticker]);
 
+  const [path, setPath] = useState([]);
+  useEffect(() => {
+    setPath(pathfinder({ direction, head, food, tail, width, height }));
+    console.log({ path });
+  }, [ticker]);
+
   useEffect(() => {
     setBody(moveSnakeBody(head, body));
     if (game) {
@@ -400,6 +513,26 @@ const Snake = ({
     ));
   };
 
+  const renderPath = () => {
+    return path.map((part, i) => (
+      <div
+        className="tail"
+        key={`${i}tail`}
+        style={{
+          width: 10,
+          zIndex: 15,
+          borderRadius: dots && "50%",
+          height: 10,
+          backgroundColor: "red",
+          position: "absolute",
+          bottom: part.y * 10,
+          left: part.x * 10,
+          opacity: "80%",
+        }}
+      />
+    ));
+  };
+
   useEffect(() => {
     if (reportScore) {
       reportScore(tail.length);
@@ -545,6 +678,7 @@ const Snake = ({
           }}
         />
       )}
+      {game && renderPath()}
       {game && renderTail()}
       {macWindows?.includes("Windows") && (
         <div style={{ width: "100%", height: "100%", padding: 16 }}>
