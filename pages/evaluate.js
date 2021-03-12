@@ -19,23 +19,7 @@ window.changeDirection = ({
 }) => {  
   // Put your code in here
   
-  // This example here is our Zoolander snake AI.
-  let newDirection = direction
-  if (direction === "right" && food.x === head.x + 1) {
-    newDirection = "down";
-  }
-  if (direction === "left" && food.x === head.x - 1) {
-    newDirection = "down";
-  }
-  if (direction === "down" && food.y === head.y - 1) {
-    newDirection = "right";
-  }
-  if (direction === "up") {
-    newDirection = "right"
-  }
-  return newDirection
   
-  // This function should return "up", "down", "left" or "right".
 }
 
 // direction is the current direction of the snake
@@ -48,9 +32,29 @@ window.changeDirection = ({
 
 const scores = [
   {
-    name: "snA.I.ke",
+    name: "run1",
     score: 1,
     color: "orange",
+  },
+  {
+    name: "run2",
+    score: 1,
+    color: "red",
+  },
+  {
+    name: "run3",
+    score: 1,
+    color: "green",
+  },
+  {
+    name: "run4",
+    score: 1,
+    color: "pink",
+  },
+  {
+    name: "run5",
+    score: 1,
+    color: "blue",
   },
 ];
 
@@ -68,7 +72,7 @@ const Test = () => {
 
   const [selected, setSelected] = useState("id");
   const [error, setError] = useState(null);
-  const [speed, setSpeed] = useState(30);
+  const [speed, setSpeed] = useState(3);
 
   const handleSaveCode = () => {
     try {
@@ -79,6 +83,10 @@ const Test = () => {
       setError(err);
     }
   };
+
+  const [boardRunKey, setBoardRunKey] = useState(1);
+
+  const [scoreBoard, setScoreBoard] = useState({});
 
   return (
     <div
@@ -111,9 +119,24 @@ const Test = () => {
         Code Challenge
       </h1>
       <p style={{ textAlign: "center", marginTop: 0 }}>
-        We'll run your AI five times up until your snake dies or the ticker hits
-        60. Your score will be the average of the five runs.
+        <button onClick={() => setBoardRunKey(boardRunKey + 1)}>Reset</button>
       </p>
+      <div style={{ margin: "auto", textAlign: "center", padding: "16px 0px" }}>
+        {Object.keys(scoreBoard).map((name) => (
+          <span>
+            {name}: <b>{scoreBoard[name]}, </b>
+          </span>
+        ))}
+      </div>
+      <div style={{ margin: "auto", textAlign: "center", padding: "16px 0px" }}>
+        AVERAGE:{" "}
+        <b>
+          {Object.values(scoreBoard).reduce((total, value) => {
+            const extra = total + value;
+            return extra;
+          }, 0) / 5}
+        </b>
+      </div>
       <div
         style={{
           display: "flex",
@@ -150,9 +173,14 @@ const Test = () => {
                   score={obj.score}
                   selected={selected}
                   speed={speed}
+                  stopAt={60}
+                  boardRunKey={boardRunKey}
                   gameProp
                   onError={(err) => setError(err)}
                   smartProp
+                  reportScore={(score) =>
+                    setScoreBoard({ ...scoreBoard, [obj.name]: score })
+                  }
                   setSelected={(value) => {
                     setSelected(value);
                   }}
@@ -191,46 +219,8 @@ const Test = () => {
               overflow: "auto",
             }}
           />
-          <div
-            style={{
-              paddingTop: 16,
-              paddingBottom: 160,
-              fontSize: "16px",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <button
-              style={{
-                backgroundColor: "#3047ec",
-                padding: "8px 16px",
-                fontSize: "16px",
-                borderRadius: 4,
-                boxShadow: "none",
-                border: "none",
-                color: "white",
-                cursor: "pointer",
-              }}
-              onClick={handleSaveCode}
-            >
-              Save
-            </button>
-            <button
-              style={{
-                backgroundColor: "red",
-                padding: "8px 16px",
-                fontSize: "16px",
-                cursor: "pointer",
-                borderRadius: 4,
-                boxShadow: "none",
-                border: "none",
-                color: "white",
-              }}
-              onClick={() => setCode(defaultCode)}
-            >
-              Reset
-            </button>
-          </div>
+          <button onClick={handleSaveCode}>Save</button>
+          <button onClick={() => setCode(defaultCode)}>Reset</button>
         </div>
       </div>
     </div>
