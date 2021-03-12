@@ -49,11 +49,27 @@ const Snake = ({
   const [tailLength, setTailLength] = useState(0);
   const [tail, setTail] = useState([]);
 
+  const randomDirection = () => {
+    const variable = Math.random();
+    if (variable < 0.25) {
+      return "up";
+    } else if (variable < 0.5) {
+      return "down";
+    } else if (variable < 0.75) {
+      return "left";
+    } else return "right";
+  };
+
   useEffect(() => {
     if (boardRunKey) {
       setTicker(0);
       setTail([]);
+      setDirection(randomDirection());
       setPause(false);
+      setHead({
+        x: Math.floor(Math.random() * (width - 2)) + 1,
+        y: Math.floor(Math.random() * (height - 2)) + 1,
+      });
     }
   }, [boardRunKey]);
 
@@ -157,17 +173,6 @@ const Snake = ({
     return () => clearInterval(interval);
   }, []);
   */
-
-  const randomDirection = () => {
-    const variable = Math.random();
-    if (variable < 0.25) {
-      return "up";
-    } else if (variable < 0.5) {
-      return "down";
-    } else if (variable < 0.75) {
-      return "left";
-    } else return "right";
-  };
 
   const opposites = {
     left: "right",

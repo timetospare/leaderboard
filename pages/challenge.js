@@ -57,6 +57,8 @@ const scores = [
 const Test = () => {
   const [code, setCode] = useState(defaultCode);
 
+  const [boardRunKey, setBoardRunKey] = useState(1);
+
   useEffect(() => {
     if (
       typeof window !== "undefined" &&
@@ -128,18 +130,35 @@ const Test = () => {
               style={{
                 color: "white",
                 marginTop: 0,
-
+                justifyContent: "space-between",
                 display: "flex",
                 alignItems: "center",
               }}
             >
-              Tick speed:
-              <input
-                type="number"
-                style={{ marginLeft: 16, height: "100%", width: 64 }}
-                value={speed}
-                onChange={(e) => setSpeed(Number(e.target.value))}
-              />
+              <div style={{ display: "flex", alignItems: "center" }}>
+                Tick speed:
+                <input
+                  type="number"
+                  style={{ marginLeft: 16, height: "100%", width: 64 }}
+                  value={speed}
+                  onChange={(e) => setSpeed(Number(e.target.value))}
+                />
+              </div>
+              <button
+                style={{
+                  backgroundColor: "#3047ec",
+                  padding: "8px 16px",
+                  fontSize: "16px",
+                  borderRadius: 4,
+                  boxShadow: "none",
+                  border: "none",
+                  color: "white",
+                  cursor: "pointer",
+                }}
+                onClick={() => setBoardRunKey(boardRunKey + 1)}
+              >
+                Restart
+              </button>
             </h2>
           </div>
           <div>
@@ -150,6 +169,7 @@ const Test = () => {
                   score={obj.score}
                   selected={selected}
                   speed={speed}
+                  boardRunKey={boardRunKey}
                   gameProp
                   onError={(err) => {
                     console.log({ err });
@@ -251,6 +271,13 @@ const Test = () => {
           </div>
         </div>
       </div>
+      <style jsx>
+        {`
+          button:hover {
+            opacity: 80%;
+          }
+        `}
+      </style>
     </div>
   );
 };
