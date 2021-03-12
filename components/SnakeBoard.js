@@ -9,11 +9,14 @@ const Snake = ({
   setColor,
   score,
   name,
+  boardRunKey,
   setSelected,
   selected,
   speed,
   gameProp,
+  stopAt,
   onError,
+  reportScore,
   smartProp,
 }) => {
   const width = 40;
@@ -45,6 +48,14 @@ const Snake = ({
   });
   const [tailLength, setTailLength] = useState(0);
   const [tail, setTail] = useState([]);
+
+  useEffect(() => {
+    if (boardRunKey) {
+      setTicker(0);
+      setTail([]);
+      setPause(false);
+    }
+  }, [boardRunKey]);
 
   const checkIfEatingFood = (position) => {
     const { x, y } = position;
@@ -92,16 +103,24 @@ const Snake = ({
     if (game) {
       tail.slice(0, tail.length - 1).map((part) => {
         if (part.x === newHead.x && part.y === newHead.y) {
-          alert("You get nothing! You lose! Good day Sir.");
-          setTicker(0);
-          setTail([]);
+          if (!stopAt) {
+            alert("You get nothing! You lose! Good day Sir.");
+            setTicker(0);
+            setTail([]);
+          } else {
+            setPause(true);
+          }
         }
       });
       body.map((part) => {
         if (part.x === newHead.x && part.y === newHead.y) {
-          alert("You get nothing! You lose! Good day Sir.");
-          setTicker(0);
-          setTail([]);
+          if (!stopAt) {
+            alert("You get nothing! You lose! Good day Sir.");
+            setTicker(0);
+            setTail([]);
+          } else {
+            setPause(true);
+          }
         }
       });
       checkIfEatingFood(newHead);
@@ -163,6 +182,12 @@ const Snake = ({
 
   const pickDirection =
     typeof changeDirection !== "undefined" ? changeDirection : smartDirection;
+
+  useEffect(() => {
+    if (stopAt && ticker >= stopAt * 100) {
+      setPause(true);
+    }
+  }, [ticker]);
 
   useEffect(() => {
     setBody(moveSnakeBody(head, body));
@@ -346,6 +371,12 @@ const Snake = ({
       />
     ));
   };
+
+  useEffect(() => {
+    if (reportScore) {
+      reportScore(tail.length);
+    }
+  }, [tail.length]);
 
   const renderSnake = () =>
     body.map((part, i) => (
