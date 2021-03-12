@@ -76,13 +76,31 @@ const Snake = ({
     }
   }, [boardRunKey]);
 
+  const inTail = (point) => {
+    let clash = false;
+    tail?.forEach((part) => {
+      if (part.x === point.x && part.y === point.y) {
+        clash = true;
+      }
+    });
+    return clash;
+  };
+
   const checkIfEatingFood = (position) => {
     const { x, y } = position;
     if (food.x === x && food.y === y) {
-      setFood({
-        x: Math.floor(Math.random() * (width - 2)) + 1,
-        y: Math.floor(Math.random() * (height - 2)) + 1,
-      });
+      let suitable = false;
+      let newFood;
+      while (!suitable) {
+        newFood = {
+          x: Math.floor(Math.random() * (width - 2)) + 1,
+          y: Math.floor(Math.random() * (height - 2)) + 1,
+        };
+        if (!inTail(newFood)) {
+          suitable = true;
+        }
+      }
+      setFood(newFood);
 
       if (tailLength === 0) {
         setTail([body[0]]);
