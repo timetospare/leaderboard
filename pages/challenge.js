@@ -151,7 +151,25 @@ const Test = () => {
                   selected={selected}
                   speed={speed}
                   gameProp
-                  onError={(err) => setError(err)}
+                  onError={(err) => {
+                    console.log({ err });
+
+                    const secondLine = err.stack.substring(
+                      err.stack.indexOf("handleSaveCode")
+                    );
+                    const columnRow = secondLine
+                      .substring(
+                        secondLine.indexOf("anonymous"),
+                        secondLine.indexOf(" at")
+                      )
+                      .replace("anonymous>:", "")
+                      .replace(")", "")
+                      .trim();
+
+                    console.log({ columnRow });
+
+                    setError({ message: `${err.message} - line ${columnRow}` });
+                  }}
                   smartProp
                   setSelected={(value) => {
                     setSelected(value);
