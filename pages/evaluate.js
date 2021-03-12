@@ -165,7 +165,12 @@ const Test = () => {
               />
             </h2>
           </div>
-          <div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+            }}
+          >
             {scores.map((obj, i) => (
               <div>
                 <SnakeBoard

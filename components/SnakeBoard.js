@@ -60,12 +60,15 @@ const Snake = ({
     } else return "right";
   };
 
+  const [message, setMessage] = useState(null);
+
   useEffect(() => {
     if (boardRunKey) {
       setTicker(0);
       setTail([]);
       setDirection(randomDirection());
       setPause(false);
+      setMessage(null);
       setHead({
         x: Math.floor(Math.random() * (width - 2)) + 1,
         y: Math.floor(Math.random() * (height - 2)) + 1,
@@ -124,6 +127,7 @@ const Snake = ({
             setTicker(0);
             setTail([]);
           } else {
+            setMessage("You get nothing! You lose! Good day Sir.");
             setPause(true);
           }
         }
@@ -135,6 +139,7 @@ const Snake = ({
             setTicker(0);
             setTail([]);
           } else {
+            setMessage("You get nothing! You lose! Good day Sir.");
             setPause(true);
           }
         }
@@ -495,6 +500,18 @@ const Snake = ({
             Score: {tail.length}
           </p>
         </>
+      )}
+      {message && (
+        <div
+          style={{
+            position: "absolute",
+            width: "100%",
+            bottom: 10,
+            textAlign: "center",
+          }}
+        >
+          {message}
+        </div>
       )}
       {game && (
         <div

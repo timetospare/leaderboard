@@ -169,6 +169,7 @@ const Test = () => {
                   score={obj.score}
                   selected={selected}
                   speed={speed}
+                  stopAt={400}
                   boardRunKey={boardRunKey}
                   gameProp
                   onError={(err) => {
@@ -206,7 +207,32 @@ const Test = () => {
           </div>
         </div>
         <div style={{ width: 500 }}>
-          <h2 style={{ color: "white", marginTop: 0 }}>Your code</h2>
+          <h2
+            style={{
+              color: "white",
+              marginTop: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            Your code{" "}
+            <button
+              style={{
+                backgroundColor: "#3047ec",
+                padding: "8px 16px",
+                fontSize: "16px",
+                borderRadius: 4,
+                boxShadow: "none",
+                border: "none",
+                color: "white",
+                cursor: "pointer",
+              }}
+              onClick={handleSaveCode}
+            >
+              Run
+            </button>
+          </h2>
           {error && (
             <p style={{ color: "red", fontWeight: "bold" }}>{error.message}</p>
           )}
@@ -251,7 +277,7 @@ const Test = () => {
               }}
               onClick={handleSaveCode}
             >
-              Save
+              Run
             </button>
             <button
               style={{
