@@ -8,11 +8,16 @@
     "start": "next start"
   },
   "dependencies": {
+    "@use-it/interval": "^1.0.0",
+    "autoprefixer": "^10.2.5",
     "next": "10.0.4",
+    "postcss": "^8.2.8",
     "prismjs": "^1.23.0",
     "randomcolor": "^0.6.2",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-simple-code-editor": "^0.11.0"
+    "react-icons": "^4.2.0",
+    "react-simple-code-editor": "^0.11.0",
+    "tailwindcss": "^2.0.3"
   }
 }
